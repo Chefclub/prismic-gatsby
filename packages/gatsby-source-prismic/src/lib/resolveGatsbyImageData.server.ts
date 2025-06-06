@@ -138,6 +138,15 @@ export const resolveGatsbyImageData = async (
 	options: GatsbyImageDataArgs = {},
 	config: ResolveGatsbyImageDataConfig,
 ): Promise<IGatsbyImageData | null> => {
+	// Always replace the domain in the image URL
+	let resolvedUrl = image.url.replace(
+		"https://images.prismic.io",
+		"https://images.chefclub.tv",
+	);
+	if (resolvedUrl !== image.url) {
+		console.log(`[gatsby-source-prismic] Image domain replaced: ${image.url} -> ${resolvedUrl}`);
+	}
+
 	const imageDataArgs: IGatsbyImageHelperArgs = {
 		pluginName: config.pluginName || packageName,
 		sourceMetadata: {
@@ -145,7 +154,7 @@ export const resolveGatsbyImageData = async (
 			height: image.height,
 			format: "auto",
 		},
-		filename: image.url,
+		filename: resolvedUrl,
 		generateImageSource,
 		options,
 		layout: options.layout,
